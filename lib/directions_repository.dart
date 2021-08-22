@@ -10,11 +10,11 @@ class DirectionsRepository {
 
   final Dio _dio;
 
-  DirectionsRepository({Dio dio}) : _dio = dio ?? Dio();
+  DirectionsRepository({Dio? dio}) : _dio = dio ?? Dio();
 
-  Future<Directions> getDirections({
-    @required LatLng origin,
-    @required LatLng destination,
+  Future<Directions?> getDirections({
+    required LatLng origin,
+    required LatLng destination,
   }) async {
     final response = await _dio.get(
       _baseUrl,
@@ -27,6 +27,8 @@ class DirectionsRepository {
 
     // Check if response is successful
     if (response.statusCode == 200) {
+      if ((response.data['routes'] as List).isEmpty) return null;
+
       return Directions.fromMap(response.data);
     }
     return null;
